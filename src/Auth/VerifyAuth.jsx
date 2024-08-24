@@ -1,7 +1,7 @@
 import React from "react";
 import BasicPage from "../components/basicPage/BasicPage";
 
-const isLoggedin = false;
+const isLoggedin = true;
 
 const VerifyAuth = ({ children }) => {
   return isLoggedin ? children : <BasicPage />;
