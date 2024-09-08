@@ -9,7 +9,7 @@ import {
 
 export default function NaveBar() {
   return (
-    <div className="bg-black border-t border-gray-500 absolute bottom-0 text-white w-full">
+    <div className="z-10 bg-black border-t border-gray-500 sticky bottom-0 text-white w-full">
       <ul className="list-none flex w-full items-center justify-evenly py-4">
         <li className="cursor-pointer hover:text-pink-600">
           <FaHome className="text-[24px]"></FaHome>

@@ -5,12 +5,12 @@ import SearchBar from "../components/NaveBar/SearchBar";
 
 const HomeLayout = () => {
   return (
-    <div>
+    <div className="h-full">
+      <SearchBar />
       <div>
-        <SearchBar />
-        <NaveBar />
+        <Outlet></Outlet>
       </div>
-      <Outlet></Outlet>
+      <NaveBar />
     </div>
   );
 };
