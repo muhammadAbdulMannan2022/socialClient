@@ -88,7 +88,7 @@ const Home = () => {
     },
   ]);
   return (
-    <div className="bg-black text-white pt-2">
+    <div className="bg-black text-white pt-2 ">
       <div className="">
         <PeopleList />
       </div>

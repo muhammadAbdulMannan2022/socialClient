@@ -90,7 +90,7 @@ export default function PeopleList() {
   }, []);
 
   return (
-    <div className="w-[100vw] relative">
+    <div className="w-[100vw] relative md:flex md:items-center md:justify-center">
       {showLeftButton && (
         <div
           onClick={scrollLeft}
@@ -102,7 +102,7 @@ export default function PeopleList() {
 
       <ul
         ref={containerRefToScroll}
-        className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-[100vw]"
+        className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-[100vw] md:w-auto"
       >
         {users.map((user, index) => (
           <div
