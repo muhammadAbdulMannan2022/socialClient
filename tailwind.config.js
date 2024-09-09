@@ -16,6 +16,9 @@ export default {
             display: "none" /* Chrome, Safari, and Opera */,
           },
         },
+        ".logoFont": {
+          fontFamily: '"Playwrite CU", cursive', // Properly formatted font-family declaration
+        },
       });
     }),
   ],
