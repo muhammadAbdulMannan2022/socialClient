@@ -90,7 +90,7 @@ export default function PeopleList() {
   }, []);
 
   return (
-    <div className="w-[100vw] relative md:flex md:items-center md:justify-center">
+    <div className="w-full relative md:flex md:items-center md:justify-center">
       {showLeftButton && (
         <div
           onClick={scrollLeft}
