@@ -1,10 +1,11 @@
 import React from "react";
-import BasicPage from "../components/basicPage/BasicPage";
+import { useNavigate } from "react-router-dom";
 
-const isLoggedin = true;
+const isLoggedin = false;
 
 const VerifyAuth = ({ children }) => {
-  return isLoggedin ? children : <BasicPage />;
+  const navigate = useNavigate();
+  return isLoggedin ? children : navigate("/login");
 };
 
 export default VerifyAuth;
