@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function SearchBar() {
   return (
-    <div className="order-1 md:hidden flex z-10 bg-black sticky top-0 w-full border-b border-gray-400 text-white items-center gap-2 py-2 px-2 justify-between">
+    <div className="md:hidden flex z-10 bg-black sticky top-0 w-full border-b border-gray-400 text-white items-center gap-2 py-2 px-2 justify-between">
       <div className="max-w-[40px]">
         <img
           className="w-full"

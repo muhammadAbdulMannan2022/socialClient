@@ -102,7 +102,7 @@ export default function PeopleList() {
 
       <ul
         ref={containerRefToScroll}
-        className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-[100vw] md:w-auto"
+        className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-full md:w-auto"
       >
         {users.map((user, index) => (
           <div

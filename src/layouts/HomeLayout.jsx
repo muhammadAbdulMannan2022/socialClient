@@ -5,11 +5,16 @@ import SearchBar from "../components/NaveBar/SearchBar";
 
 const HomeLayout = () => {
   return (
-    <div className="h-full md:flex md:flex-row">
+    <div className="h-screen md:flex md:flex-row flex flex-col">
+      {/* SearchBar on top for small screens */}
       <SearchBar />
-      <div className="md:h-full md:order-2 md:w-[90%] lg:w-[75%]">
-        <Outlet></Outlet>
+
+      {/* Main content that scrolls */}
+      <div className="md:h-full md:order-2 md:w-[90%] lg:w-[75%] bg-black flex-grow overflow-auto">
+        <Outlet />
       </div>
+
+      {/* NaveBar on the left (medium screens and up) and bottom (small screens) */}
       <NaveBar />
     </div>
   );
