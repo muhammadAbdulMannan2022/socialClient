@@ -1,6 +1,7 @@
 import { FaPlus, FaUserEdit } from "react-icons/fa";
 import ProfilePost from "./ProfilePost";
 import { useState } from "react";
+import Friends from "./Friends";
 
 export default function Profile({ email }) {
   const [posts, setPosts] = useState([
@@ -146,12 +147,60 @@ export default function Profile({ email }) {
       ],
     },
   ]);
+  const [isPostActive, setIsPostActive] = useState(true);
+  const [friends, setFriends] = useState([
+    {
+      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
+      _id: "1",
+      name: "John Doe",
+    },
+    {
+      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
+      _id: "2",
+      name: "Jane Smith",
+    },
+    {
+      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
+      _id: "3",
+      name: "Michael Johnson",
+    },
+    {
+      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
+      _id: "4",
+      name: "Emily Davis",
+    },
+    {
+      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
+      _id: "5",
+      name: "Chris Brown",
+    },
+    {
+      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
+      _id: "6",
+      name: "Sophia Wilson",
+    },
+    {
+      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
+      _id: "7",
+      name: "David Lee",
+    },
+    {
+      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
+      _id: "8",
+      name: "Olivia Garcia",
+    },
+    {
+      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
+      _id: "9",
+      name: "Liam Martinez",
+    },
+  ]);
   return (
     <div>
       <div className="flex flex-col items-center justify-center py-4 border-b border-gray-700">
         <div className="max-w-[150px] max-h-[150px] rounded-full relative border-4 border-green-500">
           <div className="max-w-[140px] max-h-[140px] overflow-hidden rounded-full">
-            <img src="https://i.ibb.co.com/9tVMzZd/img2.jpg" alt="" />
+            <img src="https://i.ibb.co.com/9tVMzZd/img2.jpg" alt="Profile" />
           </div>
           <div className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer">
             <FaPlus className="text-2xl" />
@@ -177,19 +226,35 @@ export default function Profile({ email }) {
           </div>
         </div>
       </div>
+
+      {/* Toggle between Posts and Friends */}
       <div className="text-white">
         <div className="flex items-center justify-between">
-          <div className="border-r border-gray-600 flex-1 text-center text-xl p-2 cursor-pointer hover:bg-gray-900">
+          <div
+            className={`border-gray-600 flex-1 text-center text-xl p-2 cursor-pointer hover:bg-gray-900 ${
+              isPostActive ? "bg-gray-800" : ""
+            }`}
+            onClick={() => setIsPostActive(true)}
+          >
             <p>Posts</p>
           </div>
-          <div className="border-gray-600 flex-1 text-center text-xl p-2 cursor-pointer hover:bg-gray-900">
+          <div
+            className={`border-gray-600 flex-1 text-center text-xl p-2 cursor-pointer hover:bg-gray-900 ${
+              !isPostActive ? "bg-gray-800" : ""
+            }`}
+            onClick={() => setIsPostActive(false)}
+          >
             <p>Friends</p>
           </div>
         </div>
+
+        {/* Conditionally Render ProfilePost or Friends */}
         <div className="flex flex-wrap items-center justify-center">
-          {posts.map((post) => (
-            <ProfilePost key={post?.postId} post={post} />
-          ))}
+          {isPostActive ? (
+            <ProfilePost posts={posts} />
+          ) : (
+            <Friends friends={friends} />
+          )}
         </div>
       </div>
     </div>

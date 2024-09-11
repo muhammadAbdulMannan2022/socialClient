@@ -1,8 +1,18 @@
 import React from "react";
-import { FaPlay, FaPlayCircle } from "react-icons/fa";
+import { FaPlayCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export default function ProfilePost({ post }) {
+export default function ProfilePost({ posts }) {
+  return (
+    <>
+      {posts?.map((post) => (
+        <Profile key={post?.postId} post={post} />
+      ))}
+    </>
+  );
+}
+
+const Profile = ({ post }) => {
   return (
     <div>
       <Link to={post?.url}>
@@ -18,9 +28,9 @@ export default function ProfilePost({ post }) {
               {/* Video Element */}
               <video
                 src={post?.postMedia[0]?.url}
-                className="w-full h-full object-cover" // Ensures the video covers the entire container
-                autoPlay={false} // Set autoPlay to false
-                muted // Optional: mute the video initially
+                className="w-full h-full object-cover"
+                autoPlay={false}
+                muted
               ></video>
 
               {/* Overlay and Play Icon */}
@@ -35,4 +45,4 @@ export default function ProfilePost({ post }) {
       </Link>
     </div>
   );
-}
+};
