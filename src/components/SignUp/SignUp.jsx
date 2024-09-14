@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProviders";
+import { updateProfile } from "firebase/auth";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [emailOrMobile, setEmailOrMobile] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { emailPasswordSignup, user } = useContext(AuthContext);
+  // to navigate
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle sign-up logic here, e.g., send data to the server
+    emailPasswordSignup(emailOrMobile, password)
+      .then((res) => {
+        console.log(res?.user);
+        updateProfile(res?.user, {
+          displayName: fullName,
+        });
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -25,26 +50,35 @@ const SignUp = () => {
         <h1 className="text-2xl text-center font-bold mb-4">Sign Up</h1>
 
         {/* Sign Up Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <input
+              required
               type="text"
               placeholder="Mobile Number or Email"
+              value={emailOrMobile}
+              onChange={(e) => setEmailOrMobile(e.target.value)} // Update state
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
           <div>
             <input
+              required
               type="text"
               placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)} // Update state
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"} // Toggle input type
+              required
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Update state
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             {/* Toggle Icon */}

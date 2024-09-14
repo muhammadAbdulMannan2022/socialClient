@@ -1,17 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
-import VerifyAuth from "../Auth/VerifyAuth";
 import HomeLayout from "../layouts/HomeLayout";
 import Home from "../components/Home/Home";
 import LogIn from "../components/LogIn/LogIn";
 import SignUp from "../components/SignUp/SignUp";
 import Profile from "../components/Profile/Profile";
+import OnlyUsers from "../Private/OnlyUsers";
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <VerifyAuth>
+      <OnlyUsers>
         <HomeLayout />
-      </VerifyAuth>
+      </OnlyUsers>
     ),
     children: [
       {
