@@ -10,7 +10,7 @@ const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { emailPasswordSignup, user } = useContext(AuthContext);
+  const { emailPasswordSignup, setLoading } = useContext(AuthContext);
   // to navigate
   const navigate = useNavigate();
 
@@ -27,6 +27,7 @@ const SignUp = () => {
         updateProfile(res?.user, {
           displayName: fullName,
         });
+        setLoading(false);
         navigate("/");
       })
       .catch((err) => {

@@ -1,13 +1,34 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [usernameOrEmail, setUsernameOrEmail] = useState(""); // State for username or email
+  const [password, setPassword] = useState(""); // State for password
+
+  const { logInUserEmailPassword, setLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle login logic here
+    logInUserEmailPassword(usernameOrEmail, password)
+      .then((res) => {
+        console.log(res?.user);
+        setLoading(false);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black">
       {/* Instagram Icon */}
@@ -15,27 +36,31 @@ const LogIn = () => {
         <img
           className="w-full"
           src="https://i.ibb.co.com/h7pN5fb/logo-removebg-preview.png"
-          alt="Isntashohor"
+          alt="Instashohor"
         />
       </div>
 
       {/* Login Box */}
       <div className="w-full max-w-xs bg-gray-900 text-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-2xl text-center font-bold mb-4">Instasohor</h1>
+        <h1 className="text-2xl text-center font-bold mb-4">Instashohor</h1>
 
         {/* Login Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
               placeholder="Phone number, username, or email"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)} // Update state
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"} // Toggle input type
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Update state
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             {/* Toggle Icon */}
