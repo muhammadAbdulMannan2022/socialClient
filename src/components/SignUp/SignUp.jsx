@@ -27,6 +27,7 @@ const SignUp = () => {
       // Wait for the profile to be updated
       await updateProfile(res?.user, {
         displayName: fullName,
+        photoURL: "https://picsum.photos/200/200",
       });
 
       // Now you can access the updated displayName
@@ -54,6 +55,9 @@ const SignUp = () => {
 
       navigate("/");
     } catch (err) {
+      if (err.code === "auth/email-already-in-use") {
+        alert("email alrady is use");
+      }
       console.log(err);
     } finally {
       setLoading(false);
