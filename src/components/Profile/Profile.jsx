@@ -1,9 +1,11 @@
 import { FaPlus, FaUserEdit } from "react-icons/fa";
 import ProfilePost from "./ProfilePost";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Friends from "./Friends";
+import { AuthContext } from "../../Providers/AuthProviders";
+export default function Profile() {
+  const { user } = useContext(AuthContext);
 
-export default function Profile({ email }) {
   const [posts, setPosts] = useState([
     {
       postId: "12345",
@@ -199,16 +201,19 @@ export default function Profile({ email }) {
     <div>
       <div className="flex flex-col items-center justify-center py-4 border-b border-gray-700">
         <div className="max-w-[150px] max-h-[150px] rounded-full relative border-4 border-green-500">
-          <div className="max-w-[140px] max-h-[140px] overflow-hidden rounded-full">
-            <img src="https://i.ibb.co.com/9tVMzZd/img2.jpg" alt="Profile" />
+          <div className="w-[140px] h-[140px] overflow-hidden rounded-full">
+            <img
+              src={`${user ? user?.photoURL : "../assets/avatar-loading.svg"}`}
+              alt="Profile"
+            />
           </div>
           <div className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer">
             <FaPlus className="text-2xl" />
           </div>
         </div>
-        <div className="text-white pt-2">
+        <div className="text-white pt-2 flex flex-col items-center justify-center">
           <div className="text-center text-[20px] mb-4">
-            <p>Janifar Tomas</p>
+            <p className="font-bold text-[30px]">{user?.displayName}</p>
           </div>
 
           <div className="flex space-x-4">
@@ -249,7 +254,7 @@ export default function Profile({ email }) {
         </div>
 
         {/* Conditionally Render ProfilePost or Friends */}
-        <div className="flex flex-wrap items-center justify-center">
+        <div className="flex flex-wrap items-center justify-center lg:px-[15%]">
           {isPostActive ? (
             <ProfilePost posts={posts} />
           ) : (

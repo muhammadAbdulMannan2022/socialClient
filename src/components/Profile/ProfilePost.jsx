@@ -14,7 +14,7 @@ export default function ProfilePost({ posts }) {
 
 const Profile = ({ post }) => {
   return (
-    <div>
+    <div className="">
       <Link to={post?.url}>
         <div className="w-[120px] h-[120px] overflow-hidden border border-gray-600 flex items-start justify-center">
           {post?.postMedia[0]?.type === "image" ? (
