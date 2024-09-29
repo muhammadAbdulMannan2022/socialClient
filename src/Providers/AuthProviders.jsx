@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 // TODO: change the status and role
 import app from "../firebase/firebase.config";
+const urlOfBackend = "http://localhost:5000";
 const auth = getAuth(app);
 // context to get user
 export const AuthContext = createContext(null);
@@ -48,6 +49,7 @@ const AuthProvider = ({ children }) => {
     user,
     userFdb,
     loading,
+    urlOfBackend,
     setLoading,
     logOutUser,
     emailPasswordSignup,

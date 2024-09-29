@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   FaCalendarPlus,
   FaFacebookMessenger,
@@ -6,8 +7,10 @@ import {
 } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 export default function NaveBar() {
+  const { user } = useContext(AuthContext);
   return (
     <div className="z-10 bg-black text-white w-full md:w-[10%] lg:w-[25%] md:h-screen sticky bottom-0 md:sticky md:top-0 md:left-0 border-t border-gray-500 md:border-t-0 md:border-r md:bg-slate-950">
       <ul className="list-none flex w-full items-center justify-evenly py-4 md:flex-col md:items-center md:px-2 md:h-full md:justify-between lg:items-start">
@@ -75,7 +78,11 @@ export default function NaveBar() {
           <div className="max-w-[24px] md:max-w-[30px]">
             <img
               className="w-full"
-              src="https://randomimg.almahmud.top/uploads/1725694636808-698707919-65.png"
+              src={
+                user?.photoURL
+                  ? `${user?.photoURL}`
+                  : "https://randomimg.almahmud.top/uploads/1725694636808-698707919-65.png"
+              }
               alt="avatar"
             />
           </div>

@@ -11,28 +11,53 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
 
   const { emailPasswordSignup, setLoading } = useContext(AuthContext);
-  // to navigate
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const { urlOfBackend } = useContext(AuthContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign-up logic here, e.g., send data to the server
-    emailPasswordSignup(emailOrMobile, password)
-      .then((res) => {
-        console.log(res?.user);
-        updateProfile(res?.user, {
-          displayName: fullName,
-        });
-        setLoading(false);
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err);
+    setLoading(true);
+    try {
+      const res = await emailPasswordSignup(emailOrMobile, password);
+      // Wait for the profile to be updated
+      await updateProfile(res?.user, {
+        displayName: fullName,
       });
+
+      // Now you can access the updated displayName
+      const updatedUser = {
+        ...res.user,
+        displayName: fullName, // Set displayName from state
+        photoURL: res.user.photoURL || "https://picsum.photos/200/200", // This will still be null unless set during user creation
+      };
+
+      console.log("signUp", updatedUser);
+
+      // Send user data to backend
+      await fetch(`${urlOfBackend}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: emailOrMobile,
+          name: updatedUser.displayName, // Use the updated displayName
+          avatar: updatedUser.photoURL, // This will still be null unless specified
+          uid: updatedUser.uid,
+        }),
+      });
+
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,7 +83,7 @@ const SignUp = () => {
               type="text"
               placeholder="Mobile Number or Email"
               value={emailOrMobile}
-              onChange={(e) => setEmailOrMobile(e.target.value)} // Update state
+              onChange={(e) => setEmailOrMobile(e.target.value)}
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
@@ -68,7 +93,7 @@ const SignUp = () => {
               type="text"
               placeholder="Full Name"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)} // Update state
+              onChange={(e) => setFullName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
@@ -79,7 +104,7 @@ const SignUp = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Update state
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-700 bg-gray-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             {/* Toggle Icon */}
