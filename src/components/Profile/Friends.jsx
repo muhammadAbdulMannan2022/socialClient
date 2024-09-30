@@ -13,7 +13,7 @@ export default function Friends({ friends }) {
 
 const FriendCard = ({ friend }) => {
   return (
-    <div className="flex items-center space-x-4 p-2 hover:bg-gray-800 rounded-md transition-colors duration-300 w-full md:w-[60%]">
+    <div className="flex items-center space-x-4 p-2 hover:bg-gray-800 rounded-md transition-colors duration-300 w-full">
       {/* Friend Avatar */}
       <Link to={`/user/${friend?._id}`} className="flex items-center space-x-4">
         <div className="w-[60px] h-[60px] overflow-hidden rounded-full border border-gray-600">

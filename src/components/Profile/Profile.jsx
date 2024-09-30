@@ -234,7 +234,7 @@ export default function Profile() {
 
       {/* Toggle between Posts and Friends */}
       <div className="text-white">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between lg:mx-[15%]">
           <div
             className={`border-gray-600 flex-1 text-center text-xl p-2 cursor-pointer hover:bg-gray-900 ${
               isPostActive ? "bg-gray-800" : ""
