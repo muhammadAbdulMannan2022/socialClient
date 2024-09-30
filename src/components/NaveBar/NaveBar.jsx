@@ -53,13 +53,14 @@ export default function NaveBar() {
           <p className="hidden lg:block lg:font-bold text-xl">Watch</p>
         </li>
 
-        <li
+        <Link
+          to="/create"
           className="cursor-pointer hover:text-pink-600 lg:flex lg:items-start lg:gap-4 lg:hover:bg-gray-900 lg:w-full lg:p-2 lg:rounded-sm"
           title="Create"
         >
           <FaCalendarPlus className="text-[24px] md:text-[30px]" />
           <p className="hidden lg:block lg:font-bold text-xl">Create</p>
-        </li>
+        </Link>
 
         <li
           className="cursor-pointer hover:text-pink-600 lg:flex lg:items-start lg:gap-4 lg:hover:bg-gray-900 lg:w-full lg:p-2 lg:rounded-sm"

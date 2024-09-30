@@ -5,6 +5,7 @@ import LogIn from "../components/LogIn/LogIn";
 import SignUp from "../components/SignUp/SignUp";
 import Profile from "../components/Profile/Profile";
 import OnlyUsers from "../Private/OnlyUsers";
+import PostPage from "../components/postPage/PostPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/create",
+        element: <PostPage />,
       },
     ],
   },
