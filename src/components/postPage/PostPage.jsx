@@ -51,18 +51,21 @@ const PostPage = () => {
       return null;
     }
   };
-
   const handlePost = async () => {
-    if (!imageFile && !caption) {
+    if (!imageFile && !caption.trim()) {
       alert("Please add a caption or upload an image.");
       return;
     }
 
-    // Upload image to ImgBB
-    const imageUrl = await uploadImageToImgBB(imageFile);
-    if (!imageUrl) {
-      alert("Image upload failed.");
-      return;
+    let imageUrl = null;
+
+    // Only upload the image if it exists
+    if (imageFile) {
+      imageUrl = await uploadImageToImgBB(imageFile);
+      if (!imageUrl) {
+        alert("Image upload failed.");
+        return;
+      }
     }
 
     const postData = {
@@ -73,12 +76,14 @@ const PostPage = () => {
         userId: user?.uid || "unknown",
       },
       postText: caption,
-      postMedia: [
-        {
-          type: "image",
-          url: imageUrl, // URL from ImgBB
-        },
-      ],
+      postMedia: imageUrl
+        ? [
+            {
+              type: "image",
+              url: imageUrl, // URL from ImgBB
+            },
+          ]
+        : [], // Only include postMedia if an image was uploaded
       likes: {
         count: 0,
         likedByUser: false,
@@ -101,18 +106,16 @@ const PostPage = () => {
         },
         body: JSON.stringify(postData),
       });
-      // console.log(response);
 
       if (response.ok) {
         console.log("Post successfully created");
+        setCaption("");
+        setImageFile(null);
+        setImagePreview(null);
+        navigate("/");
       } else {
         console.error("Failed to create post");
       }
-      console.log(postData);
-      setCaption("");
-      setImageFile(null);
-      setImagePreview(null);
-      navigate("/");
     } catch (error) {
       console.error("Error creating post:", error);
     }
