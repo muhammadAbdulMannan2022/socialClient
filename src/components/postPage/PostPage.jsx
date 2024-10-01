@@ -94,7 +94,7 @@ const PostPage = () => {
 
     // Send the post data to your backend
     try {
-      const response = await fetch(`${urlOfBackend}/posts`, {
+      const response = await fetch(`${urlOfBackend}/createpost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

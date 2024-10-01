@@ -3,6 +3,7 @@ import PeopleList from "./PeopleList";
 import Post from "../Post/Post";
 
 const Home = () => {
+  // TODO: change the api name of /posts to /
   const [posts, setPosts] = useState([
     {
       postId: "12345", // Unique identifier for the post
@@ -87,6 +88,7 @@ const Home = () => {
       },
     },
   ]);
+
   return (
     <div className="bg-black text-white pt-2 md:flex md:flex-col md:items-center md:justify-center">
       <div className="">
