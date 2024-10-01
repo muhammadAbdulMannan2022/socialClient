@@ -1,103 +1,59 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PeopleList from "./PeopleList";
 import Post from "../Post/Post";
+import { AuthContext } from "../../Providers/AuthProviders";
+import { ScrollContext } from "../../layouts/HomeLayout";
 
 const Home = () => {
-  // TODO: change the api name of /posts to /
-  const [posts, setPosts] = useState([
-    {
-      postId: "12345", // Unique identifier for the post
-      user: {
-        username: "john_doe", // Username of the person who made the post
-        profileImage: "https://i.ibb.co/2cjWmjG/profile.jpg", // User's profile image
-        userId: "u56789", // User ID
-      },
-      postText: "Had an amazing time hiking today! #adventure #nature", // Caption or text associated with the post
-      postMedia: [
-        {
-          type: "image", // Can be 'image' or 'video'
-          url: "https://i.ibb.co/2cjWmjG/postimage.jpg", // URL to the media (image/video)
-        },
-      ],
-      likes: {
-        count: 1200, // Number of likes on the post
-        likedByUser: true, // Whether the current user has liked the post
-      },
-      comments: [
-        {
-          userId: "u23456",
-          username: "jane_smith",
-          commentText: "Looks beautiful! 😍",
-          timestamp: "2024-09-07T14:23:00Z",
-        },
-        {
-          userId: "u78901",
-          username: "mike_adventure",
-          commentText: "Where is this place?",
-          timestamp: "2024-09-07T15:10:00Z",
-        },
-      ],
-      timestamp: "2024-09-07T12:45:00Z", // Date and time when the post was created
-      location: "Rocky Mountains", // Optional location tag
-      saved: false, // Whether the post is saved by the user
-      shared: false, // Whether the post has been shared
-      postOptions: {
-        allowComments: true, // Whether commenting is allowed on the post
-        allowLikes: true, // Whether likes are enabled on the post
-      },
-    },
-    {
-      postId: "123456", // Unique identifier for the post
-      user: {
-        username: "john_doe", // Username of the person who made the post
-        profileImage: "https://i.ibb.co/2cjWmjG/profile.jpg", // User's profile image
-        userId: "u56789", // User ID
-      },
-      postText: "Do What is wanted by you.", // Caption or text associated with the post
-      postMedia: [
-        {
-          type: "image", // Can be 'image' or 'video'
-          url: "https://i.ibb.co.com/JkLq4Zr/review2.jpg", // URL to the media (image/video)
-        },
-      ],
-      likes: {
-        count: 1200, // Number of likes on the post
-        likedByUser: true, // Whether the current user has liked the post
-      },
-      comments: [
-        {
-          userId: "u23456",
-          username: "jane_smith",
-          commentText: "Looks beautiful! 😍",
-          timestamp: "2024-09-07T14:23:00Z",
-        },
-        {
-          userId: "u78901",
-          username: "mike_adventure",
-          commentText: "Where is this place?",
-          timestamp: "2024-09-07T15:10:00Z",
-        },
-      ],
-      timestamp: "2024-09-07T12:45:00Z", // Date and time when the post was created
-      location: "Rocky Mountains", // Optional location tag
-      saved: false, // Whether the post is saved by the user
-      shared: false, // Whether the post has been shared
-      postOptions: {
-        allowComments: true, // Whether commenting is allowed on the post
-        allowLikes: true, // Whether likes are enabled on the post
-      },
-    },
-  ]);
+  const { urlOfBackend } = useContext(AuthContext);
+  const scrollData = useContext(ScrollContext);
+  const [count, setCount] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [postLoading, setPostLoading] = useState(false);
+
+  // Function to fetch posts
+  const fetchPosts = () => {
+    setPostLoading(true);
+    fetch(`${urlOfBackend}/posts?skip=${count}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        // Append new posts to the previous ones
+        setPosts((prev) => [...prev, ...data]);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setPostLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchPosts(); // Fetch posts whenever count changes
+  }, [count]);
+  useEffect(() => {
+    const { top, topMax } = scrollData;
+    // console.log(topMax - 500 <= top, postLoading);
+
+    if (topMax - 500 <= top && !postLoading) {
+      setCount((prev) => prev + 1);
+      console.log("count updated", count);
+    }
+  }, [scrollData]);
 
   return (
     <div className="bg-black text-white pt-2 md:flex md:flex-col md:items-center md:justify-center">
-      <div className="">
+      <div>
         <PeopleList />
       </div>
       <div>
         {posts.map((post) => (
-          <Post key={post?.postId} post={post} />
+          <Post key={post?._id} post={post} />
         ))}
+        {postLoading && <p>Loading...</p>}
       </div>
     </div>
   );
