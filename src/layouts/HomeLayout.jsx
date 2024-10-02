@@ -13,8 +13,28 @@ const HomeLayout = () => {
       {/* Main content that scrolls */}
       <div
         onScroll={(e) => {
+          const target = e.target;
+          const scrollTop = target.scrollTop;
+
+          // Detect if the browser is Firefox
+          const isFirefox = typeof InstallTrigger !== "undefined";
+
+          let topMax;
+
+          if (isFirefox) {
+            // Use scrollTopMax in Firefox
+            topMax = target.scrollTopMax;
+          } else {
+            // Calculate the max scroll top for other browsers
+            topMax = target.scrollHeight - target.clientHeight;
+          }
+
           setScrollData({
-            topMax: e?.target?.scrollTopMax,
+            topMax: topMax,
+            top: scrollTop,
+          });
+          setScrollData({
+            topMax: e?.target?.scrollTopMax || e?.target?.scrollHeight,
             top: e?.target?.scrollTop,
           });
         }}

@@ -40,6 +40,7 @@ const Home = () => {
   useEffect(() => {
     const { top, topMax } = scrollData;
     // console.log(topMax - 500 <= top, postLoading);
+    console.log("chorome test", top, topMax);
 
     if (topMax - 500 <= top && !postLoading) {
       setCount((prev) => prev + 1);
