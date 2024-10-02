@@ -3,7 +3,8 @@ import PeopleList from "./PeopleList";
 import Post from "../Post/Post";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { ScrollContext } from "../../layouts/HomeLayout";
-
+import { io } from "socket.io-client";
+const socket = io("http://localhost:5000");
 const Home = () => {
   const { urlOfBackend } = useContext(AuthContext);
   const scrollData = useContext(ScrollContext);
@@ -40,13 +41,23 @@ const Home = () => {
   useEffect(() => {
     const { top, topMax } = scrollData;
     // console.log(topMax - 500 <= top, postLoading);
-    console.log("chorome test", top, topMax);
+    // console.log("chorome test", top, topMax);
 
     if (topMax - 500 <= top && !postLoading) {
       setCount((prev) => prev + 1);
       console.log("count updated", count);
     }
   }, [scrollData]);
+  useEffect(() => {
+    socket.on("receivePost", (newPost) => {
+      console.log("test new post is an object or not", newPost);
+
+      setPosts((prev) => [...prev, newPost]);
+    });
+    return () => {
+      socket.off("receivePost");
+    };
+  }, []);
   console.log(posts);
 
   return (

@@ -1,5 +1,5 @@
 import { FaCamera, FaPlus, FaTimes } from "react-icons/fa";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { FaEarthAsia } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ const PostPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [caption, setCaption] = useState("");
   const { user, urlOfBackend } = useContext(AuthContext);
+  const [isDesabled, setIsDesabled] = useState(false);
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -52,6 +53,7 @@ const PostPage = () => {
     }
   };
   const handlePost = async () => {
+    setIsDesabled(true);
     if (!imageFile && !caption.trim()) {
       alert("Please add a caption or upload an image.");
       return;
@@ -120,7 +122,9 @@ const PostPage = () => {
       console.error("Error creating post:", error);
     }
   };
-
+  useEffect(() => {
+    setIsDesabled(false);
+  }, []);
   return (
     <div className="h-full">
       {" "}
@@ -197,8 +201,9 @@ const PostPage = () => {
             )}
           </div>
           <button
-            onClick={handlePost}
+            onClick={(e) => handlePost(e)}
             className="mt-5 w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-800 py-2 px-6 rounded-md text-white transition-colors duration-300"
+            disabled={isDesabled}
           >
             <span className="">Post</span>
           </button>
