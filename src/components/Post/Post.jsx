@@ -1,10 +1,61 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FaComment, FaHeart, FaShare } from "react-icons/fa";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 export default function Post({
-  post: { postId, user, postText, postMedia, likes, comments, timestamp },
+  post: { _id, user, postText, postMedia, likes, comments, timestamp },
+  currentUser,
 }) {
+  const { urlOfBackend } = useContext(AuthContext);
+  const [postLikedbyCurrentUser, setPostLikedbyCurrentUser] = useState(false);
+  const [likedByUsers, setLikedByUsers] = useState([]);
+  const handleLike = () => {
+    const userId = currentUser?.uid;
+
+    // Toggle the like status and update likedByUsers array
+    let updatedLikedUsers;
+    if (likes?.likedByUser.includes(userId)) {
+      // Remove the user from likedByUsers if already liked
+      updatedLikedUsers = likedByUsers.filter((id) => id !== userId);
+    } else {
+      // Add the user to likedByUsers if not already liked
+      updatedLikedUsers = [...likedByUsers, userId];
+    }
+
+    // Update the state
+    setPostLikedbyCurrentUser(!postLikedbyCurrentUser);
+    setLikedByUsers(updatedLikedUsers);
+
+    // Update the backend
+    updatePostData(_id, updatedLikedUsers);
+  };
+
+  const updatePostData = (pId, likedByUsers) => {
+    fetch(`${urlOfBackend}/updatepostdata`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: pId,
+        updates: {
+          likes: {
+            likedByUser: likedByUsers,
+            likesCount: likedByUsers.length, // Update the like count based on the number of liked users
+          },
+        },
+      }),
+    })
+      .then((data) => console.log("Post updated successfully:", data))
+      .catch((err) => console.log("Error updating post:", err));
+  };
+  useEffect(() => {
+    if (likes?.likedByUser && currentUser?.uid) {
+      setPostLikedbyCurrentUser(likes?.likedByUser.includes(currentUser.uid));
+      setLikedByUsers([...likes.likedByUser]);
+    }
+  }, [likes, currentUser]);
   return (
     <div>
       <div className="bg-slate-950 shadow-md rounded-lg p-4 max-w-lg mx-auto my-4">
@@ -55,9 +106,14 @@ export default function Post({
         {/* Interaction Buttons */}
         <div className="flex justify-between items-center mt-4">
           <div className="flex space-x-4">
-            <button className="flex items-center text-gray-500 hover:text-red-500">
-              <FaHeart className="mr-1" />
-              <span>{likes.count}</span>
+            <button
+              onClick={handleLike}
+              className="flex items-center text-gray-500 hover:text-red-500"
+            >
+              <FaHeart
+                className={`mr-1 ${postLikedbyCurrentUser && "text-red-600"}`}
+              />
+              <span>{likes?.likesCount}</span>
             </button>
             <button className="flex items-center text-gray-500 hover:text-blue-500">
               <FaComment className="mr-1" />
@@ -90,7 +146,7 @@ Post.propTypes = {
       })
     ).isRequired,
     likes: PropTypes.shape({
-      count: PropTypes.number.isRequired, // Number of likes
+      likesCount: PropTypes.number.isRequired, // Number of likes
       likedByUser: PropTypes.array.isRequired, // Whether the current user liked the post
     }).isRequired,
     comments: PropTypes.arrayOf(

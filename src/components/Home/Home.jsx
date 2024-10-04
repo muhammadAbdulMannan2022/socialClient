@@ -6,7 +6,7 @@ import { ScrollContext } from "../../layouts/HomeLayout";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:5000");
 const Home = () => {
-  const { urlOfBackend } = useContext(AuthContext);
+  const { urlOfBackend, user } = useContext(AuthContext);
   const scrollData = useContext(ScrollContext);
   const [count, setCount] = useState(0);
   const [posts, setPosts] = useState([]);
@@ -67,7 +67,7 @@ const Home = () => {
       </div>
       <div>
         {posts.map((post) => (
-          <Post key={post?._id} post={post} />
+          <Post key={post?._id} post={post} currentUser={user} />
         ))}
         {postLoading && (
           <div>
