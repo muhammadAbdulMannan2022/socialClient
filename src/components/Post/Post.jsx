@@ -91,7 +91,7 @@ Post.propTypes = {
     ).isRequired,
     likes: PropTypes.shape({
       count: PropTypes.number.isRequired, // Number of likes
-      likedByUser: PropTypes.bool.isRequired, // Whether the current user liked the post
+      likedByUser: PropTypes.array.isRequired, // Whether the current user liked the post
     }).isRequired,
     comments: PropTypes.arrayOf(
       PropTypes.shape({
