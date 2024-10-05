@@ -2,14 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FaComment, FaHeart, FaShare } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthProviders";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 export default function Post({
-  post: { _id, user, postText, postMedia, likes, comments, timestamp },
+  post: initialPost, // Receive the initial post data as a prop
   currentUser,
 }) {
   const { urlOfBackend } = useContext(AuthContext);
+
+  // Manage the post state and use initialPost as default value
+  const [post, setPost] = useState(initialPost);
+
+  const { _id, user, postText, postMedia, likes, comments, timestamp } = post;
+
   const [postLikedbyCurrentUser, setPostLikedbyCurrentUser] = useState(false);
   const [likedByUsers, setLikedByUsers] = useState([]);
+
   const handleLike = () => {
     const userId = currentUser?.uid;
 
@@ -50,12 +60,27 @@ export default function Post({
       .then((data) => console.log("Post updated successfully:", data))
       .catch((err) => console.log("Error updating post:", err));
   };
+
   useEffect(() => {
     if (likes?.likedByUser && currentUser?.uid) {
       setPostLikedbyCurrentUser(likes?.likedByUser.includes(currentUser.uid));
       setLikedByUsers([...likes.likedByUser]);
     }
-  }, [likes, currentUser]);
+
+    // Listen for socket updates
+    socket.on("postupdate", (updatedPost) => {
+      if (updatedPost._id === _id) {
+        setPost(updatedPost); // Update the post state with new data
+        setLikedByUsers(!likedByUsers);
+      }
+    });
+
+    // Cleanup the socket listener on component unmount
+    return () => {
+      socket.off("postupdate");
+    };
+  }, [likes, currentUser, _id]);
+
   return (
     <div>
       <div className="bg-slate-950 shadow-md rounded-lg p-4 max-w-lg mx-auto my-4">
@@ -132,31 +157,31 @@ export default function Post({
 // Define propTypes for the Post component
 Post.propTypes = {
   post: PropTypes.shape({
-    postId: PropTypes.string.isRequired, // Unique identifier for the post
+    _id: PropTypes.string.isRequired,
     user: PropTypes.shape({
-      username: PropTypes.string.isRequired, // Username is required
-      profileImage: PropTypes.string.isRequired, // Profile image URL is required
-      userId: PropTypes.string.isRequired, // User ID is required
+      username: PropTypes.string.isRequired,
+      profileImage: PropTypes.string.isRequired,
+      userId: PropTypes.string.isRequired,
     }).isRequired,
-    postText: PropTypes.string.isRequired, // Caption or text is required
+    postText: PropTypes.string.isRequired,
     postMedia: PropTypes.arrayOf(
       PropTypes.shape({
-        type: PropTypes.oneOf(["image", "video"]).isRequired, // Media type must be image or video
-        url: PropTypes.string.isRequired, // URL to the media (image or video)
+        type: PropTypes.oneOf(["image", "video"]).isRequired,
+        url: PropTypes.string.isRequired,
       })
     ).isRequired,
     likes: PropTypes.shape({
-      likesCount: PropTypes.number.isRequired, // Number of likes
-      likedByUser: PropTypes.array.isRequired, // Whether the current user liked the post
+      likesCount: PropTypes.number.isRequired,
+      likedByUser: PropTypes.array.isRequired,
     }).isRequired,
     comments: PropTypes.arrayOf(
       PropTypes.shape({
-        userId: PropTypes.string.isRequired, // ID of the user who commented
-        username: PropTypes.string.isRequired, // Username of the user who commented
-        commentText: PropTypes.string.isRequired, // Comment text
-        timestamp: PropTypes.string.isRequired, // Timestamp of the comment
+        userId: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+        commentText: PropTypes.string.isRequired,
+        timestamp: PropTypes.string.isRequired,
       })
     ).isRequired,
-    timestamp: PropTypes.string.isRequired, // Post timestamp is required
+    timestamp: PropTypes.string.isRequired,
   }).isRequired,
 };
