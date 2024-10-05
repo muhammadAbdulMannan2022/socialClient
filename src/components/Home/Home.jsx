@@ -20,7 +20,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data); // TODO: REMOVE THE LOG
+        // console.log(data); // TODO: REMOVE THE LOG
         // Append new posts to the previous ones
         count > 0
           ? setPosts((prev) => [...prev, ...data])
@@ -58,11 +58,11 @@ const Home = () => {
       socket.off("receivePost");
     };
   }, []);
-  console.log(posts);
+  // console.log(posts);
 
   return (
     <div className="bg-black text-white pt-2 md:flex md:flex-col md:items-center md:justify-center">
-      <div>
+      <div className="w-full md:px-15">
         <PeopleList />
       </div>
       <div>

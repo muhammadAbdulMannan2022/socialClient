@@ -57,7 +57,9 @@ export default function Post({
         },
       }),
     })
-      .then((data) => console.log("Post updated successfully:", data))
+      .then((data) => {
+        console.log("Post updated successfully:");
+      })
       .catch((err) => console.log("Error updating post:", err));
   };
 

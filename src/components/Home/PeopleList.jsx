@@ -1,54 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 export default function PeopleList() {
-  const [users] = useState([
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "1",
-      name: "John Doe",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "2",
-      name: "Jane Smith",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "3",
-      name: "Michael Johnson",
-    },
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "4",
-      name: "Emily Davis",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "5",
-      name: "Chris Brown",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "6",
-      name: "Sophia Wilson",
-    },
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "7",
-      name: "David Lee",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "8",
-      name: "Olivia Garcia",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "9",
-      name: "Liam Martinez",
-    },
-  ]);
+  const { urlOfBackend } = useContext(AuthContext);
+  const [users, setUsers] = useState([]);
 
   const containerRefToScroll = useRef(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
@@ -82,6 +38,11 @@ export default function PeopleList() {
   useEffect(() => {
     const container = containerRefToScroll.current;
     container.addEventListener("scroll", handleScroll);
+    fetch(`${urlOfBackend}/getusers`)
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((err) => console.log(err));
+    console.log(users);
 
     // Cleanup listener on component unmount
     return () => {
@@ -113,7 +74,7 @@ export default function PeopleList() {
             <li className="min-w-[70px] h-[70px] border-4 border-pink-500 rounded-full overflow-hidden">
               <img
                 className="min-w-[70px] object-cover"
-                src={user.profile}
+                src={user?.avatar}
                 alt={`User ${index}`}
               />
             </li>
