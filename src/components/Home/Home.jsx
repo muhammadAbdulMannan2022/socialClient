@@ -67,7 +67,6 @@ const Home = () => {
       </div>
       <div>
         {posts.map((post) => {
-          console.log(post);
           return <Post key={post?._id} post={post} currentUser={user} />;
         })}
         {postLoading && (
