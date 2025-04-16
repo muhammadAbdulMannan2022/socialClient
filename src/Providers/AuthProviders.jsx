@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 // TODO: change the status and role
 import app from "../firebase/firebase.config";
@@ -25,6 +26,9 @@ const AuthProvider = ({ children }) => {
   const logInUserEmailPassword = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
+  };
+  const updateUserProfile = (updates) => {
+    return updateProfile(user, updates);
   };
   const logOutUser = () => {
     signOut(auth).then(() => {
@@ -50,6 +54,7 @@ const AuthProvider = ({ children }) => {
     userFdb,
     loading,
     urlOfBackend,
+    updateUserProfile,
     setLoading,
     logOutUser,
     emailPasswordSignup,

@@ -1,229 +1,155 @@
-import { FaPlus, FaUserEdit } from "react-icons/fa";
+import { FaPlus, FaUserEdit, FaSave, FaTimes } from "react-icons/fa";
 import ProfilePost from "./ProfilePost";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import Friends from "./Friends";
 import { AuthContext } from "../../Providers/AuthProviders";
+
 export default function Profile() {
-  const { user } = useContext(AuthContext);
+  const { user, updateUserProfile, urlOfBackend } = useContext(AuthContext);
 
   const [posts, setPosts] = useState([
-    {
-      postId: "12345",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co/2cjWmjG/postimage.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12346",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "https://www.example.com/samplevideo.mp4",
-        },
-      ],
-    },
-    {
-      postId: "12347",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/DpyzX2D/Capture.png",
-        },
-      ],
-    },
-    {
-      postId: "12348",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/LpzZPxb/img3.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12349",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "https://www.example.com/samplevideo2.mp4",
-        },
-      ],
-    },
-    {
-      postId: "12350",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/JkLq4Zr/review2.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12351",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "https://www.example.com/samplevideo3.mp4",
-        },
-      ],
-    },
-
-    {
-      postId: "12345",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co/2cjWmjG/postimage.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12346",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "https://www.example.com/samplevideo.mp4",
-        },
-      ],
-    },
-    {
-      postId: "12347",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/DpyzX2D/Capture.png",
-        },
-      ],
-    },
-    {
-      postId: "12348",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/LpzZPxb/img3.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12349",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "https://www.example.com/samplevideo2.mp4",
-        },
-      ],
-    },
-    {
-      postId: "12350",
-      url: "#",
-      postMedia: [
-        {
-          type: "image",
-          url: "https://i.ibb.co.com/JkLq4Zr/review2.jpg",
-        },
-      ],
-    },
-    {
-      postId: "12351",
-      url: "#",
-      postMedia: [
-        {
-          type: "video",
-          url: "",
-        },
-      ],
-    },
+    // ... Your posts array here ...
   ]);
   const [isPostActive, setIsPostActive] = useState(true);
   const [friends, setFriends] = useState([
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "1",
-      name: "John Doe",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "2",
-      name: "Jane Smith",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "3",
-      name: "Michael Johnson",
-    },
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "4",
-      name: "Emily Davis",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "5",
-      name: "Chris Brown",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "6",
-      name: "Sophia Wilson",
-    },
-    {
-      profile: "https://i.ibb.co/2cjWmjG/img1.jpg",
-      _id: "7",
-      name: "David Lee",
-    },
-    {
-      profile: "https://i.ibb.co/LpzZPxb/img3.jpg",
-      _id: "8",
-      name: "Olivia Garcia",
-    },
-    {
-      profile: "https://i.ibb.co/9tVMzZd/img2.jpg",
-      _id: "9",
-      name: "Liam Martinez",
-    },
+    // ... Your friends array here ...
   ]);
+
+  const [isUploading, setIsUploading] = useState(false); // Track upload state
+  const [previewImage, setPreviewImage] = useState(""); // Store preview image URL
+  const [uploadedImage, setUploadedImage] = useState(""); // Store uploaded image URL
+  const [showUploadButtons, setShowUploadButtons] = useState(false); // Toggle save/cancel buttons
+  const inputRef = useRef(null); // File input reference
+
+  const imgbbApiKey = import.meta.env.VITE_IMGBB_API; // Replace with your imgbb API key
+
+  // Handle file input change for preview
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file); // Generate preview URL
+      setPreviewImage(previewURL);
+      setShowUploadButtons(true);
+    }
+  };
+
+  // Upload the image when the user clicks Save
+  const handleSave = async () => {
+    if (!previewImage) return;
+
+    setIsUploading(true);
+    const file = inputRef.current.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+        { method: "POST", body: formData }
+      );
+
+      const result = await response.json();
+      if (result.success) {
+        const imageUrl = result.data.display_url;
+        setUploadedImage(imageUrl); // Store the uploaded image URL
+        console.log(imageUrl);
+
+        await updateUserProfile({ photoURL: imageUrl });
+        await fetch(`${urlOfBackend}/updateprofile`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user?.uid,
+            profileData: { avatar: imageUrl },
+          }),
+        });
+
+        console.log("Profile updated with new avatar:", imageUrl);
+        setPreviewImage("");
+        setShowUploadButtons(false);
+      } else {
+        alert("Image upload failed.");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Cancel the upload and reset the preview
+  const handleCancel = () => {
+    setPreviewImage(""); // Remove preview image
+    inputRef.current.value = ""; // Reset file input
+    setShowUploadButtons(false); // Hide buttons
+  };
+
   return (
     <div>
       <div className="flex flex-col items-center justify-center py-4 border-b border-gray-700">
         <div className="max-w-[150px] max-h-[150px] rounded-full relative border-4 border-green-500">
           <div className="w-[140px] h-[140px] overflow-hidden rounded-full">
             <img
-              src={`${user ? user?.photoURL : "../assets/avatar-loading.svg"}`}
+              src={
+                previewImage ||
+                uploadedImage ||
+                user?.photoURL ||
+                "../assets/avatar-loading.svg"
+              }
               alt="Profile"
+              className="object-cover w-full"
             />
           </div>
-          <div className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer">
+
+          {/* Plus Icon to Trigger File Input */}
+          <div
+            className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer"
+            onClick={() => inputRef.current.click()}
+          >
             <FaPlus className="text-2xl" />
           </div>
+
+          <input
+            type="file"
+            ref={inputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
         </div>
+
+        {/* Save and Cancel Buttons */}
+        {showUploadButtons && (
+          <div className="flex space-x-2 mt-2">
+            <button
+              className="flex items-center space-x-2 bg-green-600 text-white py-1 px-3 rounded-md hover:bg-green-700 transition-colors duration-300"
+              disabled={isUploading}
+              onClick={handleSave}
+            >
+              <FaSave />
+              <span>{isUploading ? "Saving..." : "Save"}</span>
+            </button>
+            <button
+              className="flex items-center space-x-2 bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 transition-colors duration-300"
+              onClick={handleCancel}
+            >
+              <FaTimes />
+              <span>Cancel</span>
+            </button>
+          </div>
+        )}
+
         <div className="text-white pt-2 flex flex-col items-center justify-center">
           <div className="text-center text-[20px] mb-4">
             <p className="font-bold text-[30px]">{user?.displayName}</p>
           </div>
 
           <div className="flex space-x-4">
-            {/* Create Button */}
             <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300">
               <FaPlus className="text-white" />
               <p>Create</p>
             </button>
 
-            {/* Edit Button */}
             <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300">
               <FaUserEdit className="text-white" />
               <p>Edit</p>
@@ -253,7 +179,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Conditionally Render ProfilePost or Friends */}
         <div className="flex flex-wrap items-center justify-center lg:px-[15%]">
           {isPostActive ? (
             <ProfilePost posts={posts} />

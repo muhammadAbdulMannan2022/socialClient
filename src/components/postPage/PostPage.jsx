@@ -88,7 +88,7 @@ const PostPage = () => {
         : [], // Only include postMedia if an image was uploaded
       likes: {
         count: 0,
-        likedByUser: false,
+        likedByUser: [],
       },
       comments: [],
       timestamp: new Date().toISOString(),

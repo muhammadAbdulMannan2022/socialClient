@@ -66,9 +66,10 @@ const Home = () => {
         <PeopleList />
       </div>
       <div>
-        {posts.map((post) => (
-          <Post key={post?._id} post={post} currentUser={user} />
-        ))}
+        {posts.map((post) => {
+          console.log(post);
+          return <Post key={post?._id} post={post} currentUser={user} />;
+        })}
         {postLoading && (
           <div>
             <div className=" flex space-x-2 justify-center items-center bg-white h-[100px] dark:invert">

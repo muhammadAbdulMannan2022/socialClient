@@ -141,6 +141,7 @@ export default function Post({
                 className={`mr-1 ${postLikedbyCurrentUser && "text-red-600"}`}
               />
               <span>{likes?.likesCount}</span>
+              <p>{likes?.count}</p>
             </button>
             <button className="flex items-center text-gray-500 hover:text-blue-500">
               <FaComment className="mr-1" />
