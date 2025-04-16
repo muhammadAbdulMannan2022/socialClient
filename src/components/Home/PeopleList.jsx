@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthProviders";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:5000");
 
 export default function PeopleList() {
   const { urlOfBackend } = useContext(AuthContext);
@@ -43,10 +45,20 @@ export default function PeopleList() {
       .then((data) => setUsers(data))
       .catch((err) => console.log(err));
     console.log(users);
+    socket.on("userUpdate", (userUpdate) => {
+      // console.log("test new post is an object or not", userUpdate);
 
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userUpdate._id ? userUpdate : user
+        )
+      );
+      // console.log(userUpdate);
+    });
     // Cleanup listener on component unmount
     return () => {
       container.removeEventListener("scroll", handleScroll);
+      socket.off("receivePost");
     };
   }, []);
 
@@ -65,6 +77,7 @@ export default function PeopleList() {
         ref={containerRefToScroll}
         className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-full md:w-auto"
       >
+        {console.log(users)}
         {users.map((user, index) => (
           <div
             key={index}

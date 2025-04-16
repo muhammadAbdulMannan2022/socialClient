@@ -55,6 +55,8 @@ export default function Profile() {
         console.log(imageUrl);
 
         await updateUserProfile({ photoURL: imageUrl });
+        console.log("firebase is ok");
+
         await fetch(`${urlOfBackend}/updateprofile`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
