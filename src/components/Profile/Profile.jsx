@@ -3,6 +3,7 @@ import ProfilePost from "./ProfilePost";
 import { useContext, useState, useRef } from "react";
 import Friends from "./Friends";
 import { AuthContext } from "../../Providers/AuthProviders";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const { user, updateUserProfile, urlOfBackend } = useContext(AuthContext);
@@ -147,10 +148,13 @@ export default function Profile() {
           </div>
 
           <div className="flex space-x-4">
-            <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300">
+            <Link
+              to="/create"
+              className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300"
+            >
               <FaPlus className="text-white" />
               <p>Create</p>
-            </button>
+            </Link>
 
             <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300">
               <FaUserEdit className="text-white" />

@@ -91,7 +91,7 @@ export default function PeopleList() {
                 alt={`User ${index}`}
               />
             </li>
-            <p className="text-xs text-center">{user?.name}</p>
+            <p className="text-xs text-center">{user?.name.split(" ")[0]}</p>
           </div>
         ))}
       </ul>
