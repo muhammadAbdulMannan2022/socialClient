@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { io } from "socket.io-client";
+import { Link } from "react-router-dom";
 const socket = io("http://localhost:5000");
 
 export default function PeopleList() {
@@ -79,7 +80,8 @@ export default function PeopleList() {
       >
         {console.log(users)}
         {users.map((user, index) => (
-          <div
+          <Link
+            to={`/profile/${user?.uid}`}
             key={index}
             className="max-w-[70px] cursor-pointer"
             title={user?.name}
@@ -92,7 +94,7 @@ export default function PeopleList() {
               />
             </li>
             <p className="text-xs text-center">{user?.name.split(" ")[0]}</p>
-          </div>
+          </Link>
         ))}
       </ul>
 

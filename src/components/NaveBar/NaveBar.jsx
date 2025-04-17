@@ -72,7 +72,7 @@ export default function NaveBar() {
 
         {/* Profile Link */}
         <Link
-          to="/profile"
+          to={`/profile/${user?.uid}`}
           className="cursor-pointer hover:text-pink-600 lg:flex lg:items-start lg:gap-4 lg:w-full lg:p-2 lg:rounded-sm lg:border-t"
           title="Profile"
         >

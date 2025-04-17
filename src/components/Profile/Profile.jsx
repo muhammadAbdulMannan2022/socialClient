@@ -1,12 +1,15 @@
 import { FaPlus, FaUserEdit, FaSave, FaTimes } from "react-icons/fa";
 import ProfilePost from "./ProfilePost";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import Friends from "./Friends";
 import { AuthContext } from "../../Providers/AuthProviders";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function Profile() {
   const { user, updateUserProfile, urlOfBackend } = useContext(AuthContext);
+  const [profileOfUsr, setProfileOfUser] = useState({});
+  const { uid } = useParams();
+  // console.log(uid);
 
   const [posts, setPosts] = useState([
     // ... Your posts array here ...
@@ -24,6 +27,23 @@ export default function Profile() {
 
   const imgbbApiKey = import.meta.env.VITE_IMGBB_API; // Replace with your imgbb API key
 
+  useEffect(() => {
+    if (uid == user?.uid) {
+      console.log("current user Profile is visited");
+
+      setProfileOfUser(user);
+    } else {
+      fetch(`${urlOfBackend}/user?uid=${uid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setProfileOfUser(data?.user);
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log("error in respose\n", err);
+        });
+    }
+  }, [uid]);
   // Handle file input change for preview
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -96,7 +116,8 @@ export default function Profile() {
               src={
                 previewImage ||
                 uploadedImage ||
-                user?.photoURL ||
+                profileOfUsr?.photoURL ||
+                profileOfUsr?.avatar ||
                 "../assets/avatar-loading.svg"
               }
               alt="Profile"
@@ -105,12 +126,14 @@ export default function Profile() {
           </div>
 
           {/* Plus Icon to Trigger File Input */}
-          <div
-            className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer"
-            onClick={() => inputRef.current.click()}
-          >
-            <FaPlus className="text-2xl" />
-          </div>
+          {uid === user?.uid && (
+            <div
+              className="absolute top-[7%] -left-1 rounded-full flex items-center justify-center bg-gray-800 text-blue-500 border-2 border-gray-400 w-[40px] h-[40px] cursor-pointer"
+              onClick={() => inputRef.current.click()}
+            >
+              <FaPlus className="text-2xl" />
+            </div>
+          )}
 
           <input
             type="file"
@@ -144,23 +167,29 @@ export default function Profile() {
 
         <div className="text-white pt-2 flex flex-col items-center justify-center">
           <div className="text-center text-[20px] mb-4">
-            <p className="font-bold text-[30px]">{user?.displayName}</p>
+            <p className="font-bold text-[30px]">
+              {profileOfUsr?.displayName || profileOfUsr?.name}
+            </p>
           </div>
+          {/* {uid === user?.uid && alert("user match")} */}
+          {uid === user?.uid ? (
+            <div className="flex space-x-4">
+              <Link
+                to="/create"
+                className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300"
+              >
+                <FaPlus className="text-white" />
+                <p>Create</p>
+              </Link>
 
-          <div className="flex space-x-4">
-            <Link
-              to="/create"
-              className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300"
-            >
-              <FaPlus className="text-white" />
-              <p>Create</p>
-            </Link>
-
-            <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300">
-              <FaUserEdit className="text-white" />
-              <p>Edit</p>
-            </button>
-          </div>
+              <button className="flex items-center space-x-2 bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300">
+                <FaUserEdit className="text-white" />
+                <p>Edit</p>
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 
