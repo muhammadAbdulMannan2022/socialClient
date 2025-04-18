@@ -78,7 +78,7 @@ export default function PeopleList() {
         ref={containerRefToScroll}
         className="scrollbar-hide flex gap-2 px-2 py-1 overflow-x-scroll w-full md:w-auto"
       >
-        {console.log(users)}
+        {/* {console.log(users)} */}
         {users.map((user, index) => (
           <Link
             to={`/profile/${user?.uid}`}

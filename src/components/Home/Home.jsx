@@ -36,7 +36,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts(count); // Fetch posts whenever count changes
-    console.log("data loaded...");
+    // console.log("data loaded...");
   }, [count]);
   useEffect(() => {
     const { top, topMax } = scrollData;
@@ -45,7 +45,7 @@ const Home = () => {
 
     if (topMax - 500 <= top && !postLoading) {
       setCount((prev) => prev + 1);
-      console.log("count updated", count);
+      // console.log("count updated", count);
     }
   }, [scrollData]);
   useEffect(() => {

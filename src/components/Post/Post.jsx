@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FaComment, FaHeart, FaShare } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { io } from "socket.io-client";
+import { Link } from "react-router-dom";
 
 const socket = io("http://localhost:5000");
 
@@ -11,7 +12,6 @@ export default function Post({
   currentUser,
 }) {
   const { urlOfBackend } = useContext(AuthContext);
-
   // Manage the post state and use initialPost as default value
   const [post, setPost] = useState(initialPost);
 
@@ -20,6 +20,30 @@ export default function Post({
   const [postLikedbyCurrentUser, setPostLikedbyCurrentUser] = useState(false);
   const [likedByUsers, setLikedByUsers] = useState([]);
 
+  const [postOwner, setPostOwner] = useState({});
+  useEffect(() => {
+    fetch(`${urlOfBackend}/user?uid=${user?.userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const dummy = {
+          _id: "66fcd76bdfb1a964e76cc6cf",
+          avater: "https://picsum.photos/200/200",
+          eamil: "programalltest@gmail.com",
+          name: "program all test",
+          uid: "fpvFY1Ewjbbtme7dBisdhxaIaJ12",
+        };
+
+        if (data?.user) {
+          setPostOwner(() => data.user); // set real data
+        } else {
+          setPostOwner(() => dummy); // fallback
+        }
+      })
+
+      .catch((err) => {
+        console.log("error in respose\n", err);
+      });
+  }, [user]);
   const handleLike = () => {
     const userId = currentUser?.uid;
 
@@ -87,19 +111,28 @@ export default function Post({
     <div>
       <div className="bg-slate-950 shadow-md rounded-lg p-4 max-w-lg mx-auto my-4">
         {/* User Info */}
-        <div className="flex items-center mb-3">
-          <img
-            className="w-10 h-10 rounded-full mr-3"
-            src={user.profileImage}
-            alt={user.username}
-          />
-          <div>
-            <p className="font-semibold">{user.username}</p>
-            <p className="text-sm text-gray-500">
-              {new Date(timestamp).toLocaleString()}
-            </p>
+        <Link to={`/profile/${user?.userId}`}>
+          <div className="flex items-center mb-3 gap-2">
+            {/* {console.log("log 104", postOwner)} */}
+            {
+              <div className="w-10 h-10 overflow-hidden rounded-full">
+                <img
+                  className="w-10 rounded-full mr-3"
+                  src={postOwner.avatar}
+                  alt={postOwner.name}
+                />
+              </div>
+            }
+            {/* {console.log(postOwner?.avatar)} */}
+
+            <div>
+              <p className="font-semibold">{postOwner?.name}</p>
+              <p className="text-sm text-gray-500">
+                {new Date(timestamp).toLocaleString()}
+              </p>
+            </div>
           </div>
-        </div>
+        </Link>
 
         {/* Post Text */}
         {postText && (
@@ -112,7 +145,7 @@ export default function Post({
         {postMedia.length > 0 && (
           <div className="mb-3">
             {postMedia.map((media, index) => (
-              <div key={index} className="mb-2">
+              <div key={index} className="mb-2 max-h-[600px] overflow-hidden">
                 {media.type === "image" ? (
                   <img
                     className="w-full rounded-lg"
@@ -120,7 +153,7 @@ export default function Post({
                     alt={`Post media ${index}`}
                   />
                 ) : (
-                  <video className="w-full rounded-lg" controls>
+                  <video className="w-full max-h-[500px] rounded-lg" controls>
                     <source src={media.url} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
@@ -140,7 +173,7 @@ export default function Post({
               <FaHeart
                 className={`mr-1 ${postLikedbyCurrentUser && "text-red-600"}`}
               />
-              <span>{likes?.count}</span>
+              <span>{likes?.likesCount}</span>
               {/* <p>{likes?.count}</p> */}
             </button>
             <button className="flex items-center text-gray-500 hover:text-blue-500">
@@ -174,7 +207,7 @@ Post.propTypes = {
       })
     ).isRequired,
     likes: PropTypes.shape({
-      likesCount: PropTypes.number.isRequired,
+      count: PropTypes.number.isRequired,
       likedByUser: PropTypes.array.isRequired,
     }).isRequired,
     comments: PropTypes.arrayOf(

@@ -76,9 +76,9 @@ export default function NaveBar() {
           className="cursor-pointer hover:text-pink-600 lg:flex lg:items-start lg:gap-4 lg:w-full lg:p-2 lg:rounded-sm lg:border-t"
           title="Profile"
         >
-          <div className="max-w-[24px] md:max-w-[40px] rounded-full overflow-hidden border border-gray-700">
+          <div className="w-[30px] h-[30px] md:h-[40px] md:w-[40px] rounded-full overflow-hidden border border-gray-700">
             <img
-              className="w-[40px]"
+              className="w-[40px] min-h-[40px]"
               src={
                 user?.photoURL
                   ? `${user?.photoURL}`
