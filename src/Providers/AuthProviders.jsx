@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 // TODO: change the status and role
 import app from "../firebase/firebase.config";
-const urlOfBackend = "http://localhost:5000";
+const urlOfBackend = "https://instashohorserver.onrender.com";
 const auth = getAuth(app);
 // context to get user
 export const AuthContext = createContext(null);

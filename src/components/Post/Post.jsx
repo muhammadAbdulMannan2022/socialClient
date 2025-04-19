@@ -5,7 +5,7 @@ import { AuthContext } from "../../Providers/AuthProviders";
 import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://instashohor-31280.web.app");
 
 export default function Post({
   post: initialPost, // Receive the initial post data as a prop

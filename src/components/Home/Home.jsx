@@ -4,7 +4,7 @@ import Post from "../Post/Post";
 import { AuthContext } from "../../Providers/AuthProviders";
 import { ScrollContext } from "../../layouts/HomeLayout";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io("https://instashohor-31280.web.app");
 const Home = () => {
   const { urlOfBackend, user } = useContext(AuthContext);
   const scrollData = useContext(ScrollContext);
