@@ -17,29 +17,36 @@ const Profile = ({ post }) => {
     <div className="">
       <Link to={post?.url}>
         <div className="w-[120px] h-[120px] overflow-hidden border border-gray-600 flex items-start justify-center">
-          {post?.postMedia[0]?.type === "image" ? (
-            <img
-              className="w-[115px]"
-              src={post?.postMedia[0]?.url}
-              alt={post?.postId}
-            />
-          ) : (
-            <div>
-              {/* Video Element */}
-              <video
+          {post?.postMedia?.length > 0 ? (
+            post?.postMedia[0]?.type === "image" ? (
+              <img
+                className="w-[115px]"
                 src={post?.postMedia[0]?.url}
-                className="w-full h-full object-cover"
-                autoPlay={false}
-                muted
-              ></video>
+                alt={post?.postId}
+              />
+            ) : (
+              <div className="relative w-full h-full">
+                <video
+                  src={post?.postMedia[0]?.url}
+                  className="w-full h-full object-cover"
+                  controls // optional: adds play/pause/etc.
+                  muted
+                ></video>
 
-              {/* Overlay and Play Icon */}
-              <div className="flex items-center justify-center">
-                <div className="bg-black rounded-full p-[1px]">
-                  <FaPlayCircle className="text-white text-xl" />
+                {/* Optional play icon overlay */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-black rounded-full p-1 bg-opacity-50">
+                    <FaPlayCircle className="text-white text-2xl" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )
+          ) : (
+            <Link to={`/post/${post.postId}`}>
+              <div className="p-2 text-base text-white line-clamp-2 hover:underline">
+                {post?.postText}
+              </div>
+            </Link>
           )}
         </div>
       </Link>

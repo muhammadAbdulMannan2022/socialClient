@@ -11,9 +11,7 @@ export default function Profile() {
   const { uid } = useParams();
   // console.log(uid);
 
-  const [posts, setPosts] = useState([
-    // ... Your posts array here ...
-  ]);
+  const [posts, setPosts] = useState([]);
   const [isPostActive, setIsPostActive] = useState(true);
   const [friends, setFriends] = useState([
     // ... Your friends array here ...
@@ -28,6 +26,13 @@ export default function Profile() {
   const imgbbApiKey = import.meta.env.VITE_IMGBB_API; // Replace with your imgbb API key
 
   useEffect(() => {
+    fetch(`${urlOfBackend}/userpost?userid=${uid}`)
+      .then((res) => res.json())
+      .then((userAllPost) => {
+        setPosts(userAllPost);
+        console.log(userAllPost);
+      })
+      .catch((error) => console.log(error));
     if (uid == user?.uid) {
       console.log("current user Profile is visited");
 
@@ -214,7 +219,7 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center lg:px-[15%]">
+        <div className="flex flex-wrap items-center justify-center my-4 lg:px-[15%]">
           {isPostActive ? (
             <ProfilePost posts={posts} />
           ) : (
